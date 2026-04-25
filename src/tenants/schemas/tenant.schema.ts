@@ -4,9 +4,7 @@ import { Document } from "mongoose";
 @Schema()
 export class Tenant extends Document {
     @Prop({ required: true })
-    centerName: string;
-    @Prop({ required: true, unique: true })
-    tenantId: string;
+    domain: string;
 }
 
 export const TenantSchema = SchemaFactory.createForClass(Tenant);

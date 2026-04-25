@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TenantsModule } from './tenants/tenants.module';
 import { UsersModule } from './users/users.module';
-import { StudentService } from './student/student.service';
 import { StudentModule } from './student/student.module';
+import { AuthModule } from './auth/auth.module';
+import { TenantMiddleware } from './middlewares/tenant.middleware';
 
 @Module({
   imports: [
@@ -22,9 +23,15 @@ import { StudentModule } from './student/student.module';
     }),
     TenantsModule,
     UsersModule,
-    StudentModule
+    StudentModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService, StudentService],
+  providers: [AppService],
 })
-export class AppModule { }
+
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TenantMiddleware).forRoutes('*');
+  }
+}

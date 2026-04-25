@@ -15,6 +15,8 @@ export class Student extends Document {
     course: string;
     @Prop({ required: true })
     session: string;
+    @Prop({ required: true })
+    tenantId: string;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

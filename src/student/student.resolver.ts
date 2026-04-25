@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Model } from 'mongoose';
-import { Student } from './student.schema';
+import { Student } from './schemas/student.schema';
 
 @Resolver()
 export class StudentResolver {
