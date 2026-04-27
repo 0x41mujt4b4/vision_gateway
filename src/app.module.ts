@@ -22,12 +22,12 @@ import { TenantMiddleware } from './middlewares/tenant.middleware';
       inject: [ConfigService],
     }),
     TenantsModule,
+    AuthModule,
     UsersModule,
     StudentModule,
-    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TenantMiddleware],
 })
 
 export class AppModule {
