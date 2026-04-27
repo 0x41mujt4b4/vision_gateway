@@ -9,6 +9,6 @@ export class TenantsController {
 
     @Post()
     createTenant(@Body() tenantDto: CreateTenantDto): Promise<Tenant> {
-        return this.tenantsService.createTenant(tenantDto.domain);
+        return this.tenantsService.createTenant(tenantDto);
     }
 }
