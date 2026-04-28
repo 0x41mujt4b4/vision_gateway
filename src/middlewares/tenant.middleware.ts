@@ -15,6 +15,21 @@ export class TenantMiddleware implements NestMiddleware {
         @InjectModel(Tenant.name) private tenantModel: Model<Tenant>,
     ) { }
 
+    private ensureTenantIsActive(tenant: Tenant): void {
+        if (tenant.status?.toLowerCase() !== 'active') {
+            throw new UnauthorizedException("Tenant is disabled");
+        }
+    }
+
+    private toRequestTenantContext(tenant: Tenant) {
+        return {
+            tenantId: String((tenant as unknown as { _id?: unknown })._id ?? ""),
+            tenantDomain: tenant.domain,
+            tenantDbName: tenant.dbName,
+            isMasterTenant: tenant.isMaster === true,
+        };
+    }
+
     async use(req: Request, res: Response, next: NextFunction) {
         if (req.headers.authorization?.startsWith('Bearer ')) {
             const [type, token] = req.headers.authorization.split(" ") ?? [];
@@ -23,8 +38,29 @@ export class TenantMiddleware implements NestMiddleware {
                 if (!payload?.tenantId) {
                     throw new UnauthorizedException("Invalid or malformed token");
                 }
-                req["tenantId"] = payload.tenantId;
-                req["tenantDomain"] = payload.tenantDomain;
+                const tenant = await this.tenantModel.findOne({ _id: payload.tenantId });
+                if (!tenant && payload.tenantDomain) {
+                    const tenantByDomain = await this.tenantModel.findOne({ domain: payload.tenantDomain });
+                    if (!tenantByDomain) {
+                        throw new NotFoundException("Tenant Not Found!");
+                    }
+                    this.ensureTenantIsActive(tenantByDomain);
+                    const context = this.toRequestTenantContext(tenantByDomain);
+                    req["tenantId"] = context.tenantId;
+                    req["tenantDomain"] = context.tenantDomain;
+                    req["tenantDbName"] = context.tenantDbName;
+                    req["isMasterTenant"] = context.isMasterTenant;
+                    return next();
+                }
+                if (!tenant) {
+                    throw new NotFoundException("Tenant Not Found!");
+                }
+                this.ensureTenantIsActive(tenant);
+                const context = this.toRequestTenantContext(tenant);
+                req["tenantId"] = context.tenantId;
+                req["tenantDomain"] = context.tenantDomain;
+                req["tenantDbName"] = context.tenantDbName;
+                req["isMasterTenant"] = context.isMasterTenant;
             } else {
                 throw new UnauthorizedException("Missing or malformed authorization header");
             }
@@ -32,15 +68,22 @@ export class TenantMiddleware implements NestMiddleware {
         }
 
         const email = req.body?.email;
+        const tenantDomainFromBody = req.body?.tenantDomain;
+        const domain = typeof tenantDomainFromBody === 'string' && tenantDomainFromBody.trim() !== ''
+            ? tenantDomainFromBody.trim().toLowerCase()
+            : (typeof email === 'string' ? email.split('@')[1] : undefined);
 
-        if (email && typeof email === 'string') {
-            const domain = email.split('@')[1];
+        if (domain && typeof domain === 'string') {
             const tenant = await this.tenantModel.findOne({ domain })
             if (!tenant) {
                 throw new NotFoundException("Tenant Not Found!")
             }
-            req['tenantDomain'] = domain;
-            req['tenantId'] = tenant._id;
+            this.ensureTenantIsActive(tenant);
+            const context = this.toRequestTenantContext(tenant);
+            req['tenantDomain'] = context.tenantDomain;
+            req['tenantId'] = context.tenantId;
+            req['tenantDbName'] = context.tenantDbName;
+            req['isMasterTenant'] = context.isMasterTenant;
         }
 
         next();

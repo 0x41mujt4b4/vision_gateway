@@ -10,6 +10,8 @@ export interface JwtPayload {
     email: string;
     tenantId: string;
     tenantDomain: string;
+    tenantDbName?: string;
+    isMasterTenant?: boolean;
     role: string;
     permissions: string[];
 }

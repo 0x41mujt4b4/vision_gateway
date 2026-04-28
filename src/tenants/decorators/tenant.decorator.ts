@@ -13,3 +13,17 @@ export const TenantDomain = createParamDecorator(
         return req.tenantDomain
     }
 )
+
+export const TenantDbName = createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) => {
+        const req = ctx.switchToHttp().getRequest();
+        return req.tenantDbName
+    }
+)
+
+export const IsMasterTenant = createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) => {
+        const req = ctx.switchToHttp().getRequest();
+        return Boolean(req.isMasterTenant)
+    }
+)

@@ -15,6 +15,8 @@ export class AuthService {
         credentials: CredentialsDto,
         tenantId: string,
         tenantDomain: string,
+        tenantDbName: string,
+        isMasterTenant: boolean,
     ): Promise<{ access_token: string }> {
         let user;
         try {
@@ -42,6 +44,8 @@ export class AuthService {
             email: user.email,
             tenantId: String(tenantId),
             tenantDomain,
+            tenantDbName,
+            isMasterTenant: Boolean(isMasterTenant),
             role,
             permissions,
         };

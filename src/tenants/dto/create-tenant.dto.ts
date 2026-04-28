@@ -10,12 +10,6 @@ export default class CreateTenantDto {
     @IsNotEmpty()
     name?: string;
 
-    /** Unique MongoDB database name for this tenant (e.g. vision_local). */
-    @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    dbName?: string;
-
     @IsString()
     @IsOptional()
     status?: string;

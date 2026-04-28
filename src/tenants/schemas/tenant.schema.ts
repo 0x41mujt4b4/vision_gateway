@@ -11,8 +11,17 @@ export class Tenant extends Document {
     dbName: string;
     @Prop({ required: true, default: "active" })
     status: string;
+    @Prop({ required: true, default: false })
+    isMaster: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
 
 export const TenantSchema = SchemaFactory.createForClass(Tenant);
+TenantSchema.index(
+    { isMaster: 1 },
+    {
+        unique: true,
+        partialFilterExpression: { isMaster: true },
+    },
+);

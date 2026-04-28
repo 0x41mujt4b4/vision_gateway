@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { TenantDomain, TenantId } from 'src/tenants/decorators/tenant.decorator';
+import { IsMasterTenant, TenantDbName, TenantDomain, TenantId } from 'src/tenants/decorators/tenant.decorator';
 import { AuthService } from './auth.service';
 import { CredentialsDto } from './dto/credentials.dto';
 
@@ -13,7 +13,9 @@ export class AuthController {
         @Body() credentials: CredentialsDto,
         @TenantId() tenantId: string,
         @TenantDomain() tenantDomain: string,
+        @TenantDbName() tenantDbName: string,
+        @IsMasterTenant() isMasterTenant: boolean,
     ): Promise<{ access_token: string }> {
-        return this.authService.signIn(credentials, tenantId, tenantDomain);
+        return this.authService.signIn(credentials, tenantId, tenantDomain, tenantDbName, isMasterTenant);
     }
 }

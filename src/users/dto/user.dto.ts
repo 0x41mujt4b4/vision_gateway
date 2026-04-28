@@ -6,8 +6,16 @@ export default class UserDto {
     name: string;
 
     @IsString()
-    @IsNotEmpty()
-    email: string;
+    @IsOptional()
+    email?: string;
+
+    @IsOptional()
+    @IsString()
+    username?: string;
+
+    @IsOptional()
+    @IsString()
+    tenantDomain?: string;
 
     @IsString()
     @IsNotEmpty()

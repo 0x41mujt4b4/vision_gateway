@@ -25,10 +25,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Normalize legacy tokens that predate role/permissions claims.
     const role = typeof payload.role === 'string' && payload.role.trim() !== '' ? payload.role : 'user';
     const permissions = Array.isArray(payload.permissions) ? payload.permissions : [];
+    const tenantDbName = typeof payload.tenantDbName === 'string' ? payload.tenantDbName : undefined;
+    const isMasterTenant = typeof payload.isMasterTenant === 'boolean' ? payload.isMasterTenant : false;
     return {
       ...payload,
       role,
       permissions,
+      tenantDbName,
+      isMasterTenant,
     };
   }
 }

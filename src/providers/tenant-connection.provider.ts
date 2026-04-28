@@ -8,7 +8,7 @@ export const tenantConnectionProvider = {
     scope: Scope.REQUEST,
     useFactory: async (request, connection: Connection) => {
         if (!request.tenantId) throw new InternalServerErrorException('Tenant ID is required');
-        const tenantDb = `tenant_${request.tenantDomain ?? request.tenantId}`;
+        const tenantDb = request.tenantDbName ?? `tenant_${request.tenantDomain ?? request.tenantId}`;
         return connection.useDb(tenantDb);
     },
     inject: [REQUEST, getConnectionToken()]
