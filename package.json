@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed:registration-defaults": "node -r ts-node/register scripts/seed-registration-defaults.ts",
+    "seed:tenant-registration-defaults": "node -r ts-node/register scripts/seed-tenant-registration-defaults.ts",
+    "migrate:tenant-config-collection": "node -r ts-node/register scripts/migrate-tenant-config-collection.ts"
   },
   "dependencies": {
     "@apollo/server": "^5.5.0",

@@ -28,6 +28,28 @@ npm run start:dev
 
 Base URL: `http://localhost:3000`
 
+## Seed Global Registration Defaults
+
+The registration defaults fallback is stored in the main database `system_config` collection under key `registration_options_default`.
+
+Run:
+
+```bash
+npm run seed:registration-defaults
+```
+
+Behavior:
+- Tenant override exists -> tenant options are returned.
+- Tenant override missing -> global default from `system_config` is returned.
+- Global default missing/invalid -> safe in-code fallback defaults are used.
+
+Tenant overrides are stored in each tenant database under `tenant_config`.
+If you have legacy data in `registration_options`, migrate it:
+
+```bash
+npm run migrate:tenant-config-collection
+```
+
 ## Documentation
 
 - Full REST API guide: [`docs/API.md`](docs/API.md)

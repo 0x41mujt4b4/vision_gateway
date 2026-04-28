@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { StudentModule } from './student/student.module';
 import { AuthModule } from './auth/auth.module';
 import { TenantMiddleware } from './middlewares/tenant.middleware';
+import { RegistrationOptionsModule } from './registration-options/registration-options.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TenantMiddleware } from './middlewares/tenant.middleware';
     AuthModule,
     UsersModule,
     StudentModule,
+    RegistrationOptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TenantMiddleware],
