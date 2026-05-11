@@ -6,10 +6,6 @@ export default class CreateStudentDto {
     @IsNotEmpty()
     name: string;
 
-    @IsString()
-    @IsNotEmpty()
-    time: string;
-
     @Type(() => Number)
     @IsNumber()
     feesAmount: number;
@@ -18,17 +14,21 @@ export default class CreateStudentDto {
     @IsNotEmpty()
     feesType: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    course: string;
+    time?: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    level: string;
+    course?: string;
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
-    session: string;
+    level?: string;
+
+    @IsOptional()
+    @IsString()
+    session?: string;
 
     /** ISO 8601 datetime when payment was made; omitted defaults to server time at creation. */
     @IsOptional()

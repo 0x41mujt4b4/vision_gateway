@@ -5,18 +5,18 @@ import { Document } from "mongoose";
 export class Student extends Document {
     @Prop({ required: true })
     name: string;
-    @Prop({ required: true })
-    time: string;
+    @Prop()
+    time?: string;
     @Prop({ required: true })
     feesAmount: number;
     @Prop({ required: true })
     feesType: string;
-    @Prop({ required: true })
-    course: string;
-    @Prop({ required: true })
-    level: string;
-    @Prop({ required: true })
-    session: string;
+    @Prop()
+    course?: string;
+    @Prop()
+    level?: string;
+    @Prop()
+    session?: string;
     /** Per-tenant incremental display id (allocated atomically on create). */
     @Prop({ type: Number, unique: true, sparse: true })
     studentNumber?: number;
